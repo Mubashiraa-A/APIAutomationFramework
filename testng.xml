@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <test verbose="2" preserve-order="true"
+          name="C:/Users/pc/Selennium Automation Projects/APIAutomationFramework/src/test/java/org/example/tests/sample/TestHelloWorld.java">
+        <classes>
+            <class name="org.example.tests.sample.TestHelloWorld">
+                <methods>
+                    <include name="Test_Postive_hello_world"/>
+                    <include name="Test_Negative_hello_world"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
