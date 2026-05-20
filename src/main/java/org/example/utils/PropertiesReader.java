@@ -1,7 +1,6 @@
 package org.example.utils;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -17,8 +16,6 @@ public class PropertiesReader {
             FileInputStream fileInputStream = new FileInputStream(file_path);
             p = new Properties();
             p.load(fileInputStream);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
