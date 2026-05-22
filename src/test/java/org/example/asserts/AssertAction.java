@@ -12,35 +12,32 @@ public class AssertAction {
     public void verifyResponseBody(String actual, String expected, String description) {
         assertEquals(actual, expected, description);
     }
-
     public void verifyResponseBody(int actual, int expected, String description) {
         assertEquals(actual, expected, description);
     }
 
 
-    //Status code Verify
+//Status code Verify
     public void verifyStatusCode(Response response, int expected) {
         assertEquals(response, expected);
     }
 
 
-    // String Key Verify - AssertJ
+// String Key Verify - AssertJ
     public void verifyStringKey(String expectedKey, String actualKey) {
         assertThat(expectedKey).isNotNull();
         assertThat(expectedKey).isNotBlank();
         assertThat(expectedKey).isEqualTo(actualKey);
     }
-
     public void verifyStringKeyNotNull(String expectedKey) {
         assertThat(expectedKey).isNotNull();
     }
-
-    public void verifyStringNotnull(int expectedKey) {
+    public void verifyStringKeyNotnull(Integer expectedKey) {
         assertThat(expectedKey).isNotNull();
     }
 
 
-    // True Verify - TestNG
+// True Verify - TestNG
     public void verifyTrue(boolean expectedKey) {
         assertTrue(expectedKey);
     }

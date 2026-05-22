@@ -64,6 +64,7 @@ public class Booking {
         return depositpaid;
     }
 
+
     public void setDepositpaid(Boolean depositpaid) {
         this.depositpaid = depositpaid;
     }
