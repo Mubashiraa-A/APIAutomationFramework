@@ -24,7 +24,6 @@ public class BaseTest {
     @BeforeTest
     public void setup() {
         System.out.println("Start the test");
-
         assertAction = new AssertAction();
         payloadManager = new PayloadManager();
 

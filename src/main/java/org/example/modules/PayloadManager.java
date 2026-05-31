@@ -2,9 +2,14 @@ package org.example.modules;
 
 import com.github.javafaker.Faker;
 import com.google.gson.Gson;
+import org.example.pojo.restfulbooker.RequestPOJO.Auth;
 import org.example.pojo.restfulbooker.RequestPOJO.Booking;
 import org.example.pojo.restfulbooker.RequestPOJO.Bookingdates;
 import org.example.pojo.restfulbooker.ResponsePOJO.BookingResponse;
+import org.example.pojo.restfulbooker.ResponsePOJO.InvalidResponse;
+import org.example.pojo.restfulbooker.ResponsePOJO.TokenResponse;
+
+import java.net.Authenticator;
 
 public class PayloadManager {
     Gson gson;
@@ -54,8 +59,8 @@ public class PayloadManager {
 
     }
 
-// 3th- payload manger - Faker
-    public String createPayloadBookingFakerJS(){
+    // 3rd- payload manger - Faker
+    public String createPayloadBookingFakerJS() {
         //  This option is you dynamically generate the first name,
         //  last name and other variables.
         faker = new Faker();
@@ -87,14 +92,34 @@ public class PayloadManager {
     }
 
 
- // Json to java Deserialization
+    //Deserialisation-- Json to java Deserialization
     public BookingResponse bookingResponseAsJava_Deserialization(String responseString) {
         gson = new Gson();
         return gson.fromJson(responseString, BookingResponse.class);
     }
 
 
+    //token
+    public String createTokenPayloadPost() {
+        Auth auth= new Auth();
+        auth.setUsername("admin");
+        auth.setPassword("password123");
 
+        gson=new Gson();
+        return  gson.toJson(auth);
+    }
+
+    //Deserialisation-- Json to java Deserialization
+    public TokenResponse tokenResponseAsJava(String responseString){
+        gson =new Gson();
+        return gson.fromJson(responseString, TokenResponse.class);
+    }
+
+
+    public String getInvalidReason(String getInvadlidResponse){
+        gson =new Gson();
+        return gson.fromJson(getInvadlidResponse, InvalidResponse.class).getReason();
+    }
 
 
 }
