@@ -3,14 +3,8 @@
 <suite name="All Test Suite">
     <test verbose="2" preserve-order="true" name="C:/Users/pc/Selennium Automation Projects/APIAutomationFramework">
         <classes>
-            <class name="org.example.tests.individual.TestCreateBooking">
-                <methods>
-                    <include name="testCreateBookingPost_Positive"/>
-                    <include name="testCreateBookingPost_Negative"/>
-                    <include name="testCreateBookingPost_Positive_Chinese"/>
+            <class name="org.example.tests.e2e_integration.TestIntegrationFlow1">
 
-
-                </methods>
             </class>
         </classes>
     </test>

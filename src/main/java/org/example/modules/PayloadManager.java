@@ -6,6 +6,7 @@ import org.example.pojo.restfulbooker.RequestPOJO.Auth;
 import org.example.pojo.restfulbooker.RequestPOJO.Booking;
 import org.example.pojo.restfulbooker.RequestPOJO.Bookingdates;
 import org.example.pojo.restfulbooker.ResponsePOJO.BookingResponse;
+import org.example.pojo.restfulbooker.ResponsePOJO.GetBookingResponse;
 import org.example.pojo.restfulbooker.ResponsePOJO.InvalidResponse;
 import org.example.pojo.restfulbooker.ResponsePOJO.TokenResponse;
 
@@ -100,7 +101,7 @@ public class PayloadManager {
 
 
     //token
-    public String createTokenPayloadPost() {
+    public String setTokenPayload() {
         Auth auth= new Auth();
         auth.setUsername("admin");
         auth.setPassword("password123");
@@ -110,16 +111,21 @@ public class PayloadManager {
     }
 
     //Deserialisation-- Json to java Deserialization
-    public TokenResponse tokenResponseAsJava(String responseString){
+    public TokenResponse getTokenResponse(String responseString){
         gson =new Gson();
         return gson.fromJson(responseString, TokenResponse.class);
     }
 
 
-    public String getInvalidReason(String getInvadlidResponse){
+    public String getInvalidReason(String getInvalidResponse){
         gson =new Gson();
-        return gson.fromJson(getInvadlidResponse, InvalidResponse.class).getReason();
+        return gson.fromJson(getInvalidResponse, InvalidResponse.class).getReason();
     }
 
+
+    public GetBookingResponse getBookingResponse(String getBookingResponse){
+        gson =new Gson();
+        return  gson.fromJson(getBookingResponse,GetBookingResponse.class);
+    }
 
 }

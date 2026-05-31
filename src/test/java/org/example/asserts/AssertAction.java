@@ -32,7 +32,7 @@ public class AssertAction {
     public void verifyStringKeyNotNull(String expectedKey) {
         assertThat(expectedKey).isNotNull();
     }
-    public void verifyStringKeyNotnull(Integer expectedKey) {
+    public void verifyIntegerKeyNotnull(Integer expectedKey) {
         assertThat(expectedKey).isNotNull();
     }
 

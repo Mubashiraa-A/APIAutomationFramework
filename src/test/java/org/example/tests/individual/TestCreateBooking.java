@@ -13,8 +13,6 @@ import org.testng.annotations.Test;
 import javax.naming.spi.ResolveResult;
 
 public class TestCreateBooking extends BaseTest {
-
-
     @Test(groups = "reg", priority = 1)
     @Owner("Mubashira")
     @Description("TC#1- Verify the booking can be created")
@@ -30,7 +28,7 @@ public class TestCreateBooking extends BaseTest {
         validatableResponse = response.then().log().all().statusCode(200);
 
         //Part 3 - validation and verification via TestNG, AssertJ
-        assertAction.verifyStringKeyNotnull(bookingResponse.getBookingid());
+        assertAction.verifyIntegerKeyNotnull(bookingResponse.getBookingid());
         assertAction.verifyStringKey(bookingResponse.getBooking().getFirstname(), "Afhaam");
     }
 
@@ -59,7 +57,7 @@ public class TestCreateBooking extends BaseTest {
         validatableResponse = response.then().log().all().statusCode(200);
 
         BookingResponse bookingResponse = payloadManager.bookingResponseAsJava_Deserialization(response.asString());
-        assertAction.verifyStringKeyNotnull(bookingResponse.getBookingid());
+        assertAction.verifyIntegerKeyNotnull(bookingResponse.getBookingid());
         assertAction.verifyStringKeyNotNull(bookingResponse.getBooking().getFirstname());
     }
 
@@ -78,7 +76,7 @@ public class TestCreateBooking extends BaseTest {
         validatableResponse = response.then().log().all().statusCode(200);
 
         assertAction.verifyStringKeyNotNull(bookingResponse.getBooking().getFirstname());
-        assertAction.verifyStringKeyNotnull(bookingResponse.getBooking().getTotalprice());
+        assertAction.verifyIntegerKeyNotnull(bookingResponse.getBooking().getTotalprice());
     }
 
 
@@ -96,5 +94,7 @@ public class TestCreateBooking extends BaseTest {
 
        validatableResponse= response.then().log().all();
        validatableResponse.statusCode(404);
+
+
     }
 }

@@ -14,11 +14,11 @@ public class TestCreateToken extends BaseTest {
     public void createToken_Positive() {
         requestSpecification.basePath(ApiConstansts.auth_url);
         response = RestAssured.given(requestSpecification).when()
-                .body(payloadManager.createTokenPayloadPost())
+                .body(payloadManager.setTokenPayload())
                 .log().all().post();
 
         // Part 2 - Extraction or Deserialization
-        TokenResponse tokenResponse = payloadManager.tokenResponseAsJava(response.asString());
+        TokenResponse tokenResponse = payloadManager.getTokenResponse(response.asString());
         validatableResponse = response.then().log().all().statusCode(200);
 
         //Part 3 - validation and verification via TestNG, AssertJ

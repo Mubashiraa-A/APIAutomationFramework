@@ -1,6 +1,8 @@
 package org.example.base;
 
+import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
@@ -44,6 +46,17 @@ public class BaseTest {
     }
 
     public String getToken() {
-        return null;
+        requestSpecification = RestAssured.given();
+        requestSpecification.baseUri(ApiConstansts.base_url).basePath(ApiConstansts.auth_url);
+        requestSpecification.contentType(ContentType.JSON);
+        requestSpecification.body(payloadManager.setTokenPayload());
+
+        response = requestSpecification.when().log().all().post();
+        validatableResponse = response.then().log().all().statusCode(200);
+
+        String token = payloadManager.getTokenResponse(response.asString()).getToken();
+        return token;
+
+
     }
 }

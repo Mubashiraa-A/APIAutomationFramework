@@ -1,4 +1,4 @@
 package org.example.tests.e2e_integration;
 
-public class TestIntegratioFlow2 {
+public class TestIntegrationFlow2 {
 }
