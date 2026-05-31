@@ -128,4 +128,15 @@ public class PayloadManager {
         return  gson.fromJson(getBookingResponse,GetBookingResponse.class);
     }
 
+    // Partial Update Payload - Only LastName
+    public String createPartialPayloadBookingLastName() {
+        Booking booking = new Booking();
+        booking.setLastname("sarah");
+
+        System.out.println(booking);
+
+        gson = new Gson();
+        return gson.toJson(booking);
+    }
+
 }
