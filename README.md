@@ -52,7 +52,6 @@ This framework is designed to:
 | Logging | Log4j2 2.25.4 |
 | Reporting | Allure TestNG 2.33.0 |
 | Test Data | Apache POI 5.5.1, JavaFaker 1.0.2 |
-| Database | (none — no built-in DB validation) |
 | Config | dotenv-java 3.0.0, SnakeYAML 2.2 |
 | CI/CD | Jenkins |
 | Dashboard | React + Vite + Recharts, Express + SQLite (see `dashboard/`) |
