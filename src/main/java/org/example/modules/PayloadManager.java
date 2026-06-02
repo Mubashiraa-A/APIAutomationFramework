@@ -11,10 +11,13 @@ import org.example.pojo.restfulbooker.ResponsePOJO.InvalidResponse;
 import org.example.pojo.restfulbooker.ResponsePOJO.TokenResponse;
 
 import java.net.Authenticator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PayloadManager {
     Gson gson;
     Faker faker;
+    private static final Logger logger = LogManager.getLogger(PayloadManager.class);
 
     // 1st payload manager -
     public String createPayloadBookingAsString_Serialization() {
@@ -31,7 +34,7 @@ public class PayloadManager {
         booking.setBookingdates(bookingdates);
         booking.setAdditionalneeds("Brunch");
 
-        System.out.println(booking);
+        logger.debug("Booking payload: {}", booking);
 
         gson = new Gson();
         return gson.toJson(booking);
@@ -52,7 +55,7 @@ public class PayloadManager {
         booking.setBookingdates(bookingdates);
         booking.setAdditionalneeds("会意; 會意");
 
-        System.out.println(booking);
+        logger.debug("Booking payload (wrong body): {}", booking);
 
         // Java Object -> JSON
         gson = new Gson();
@@ -77,7 +80,7 @@ public class PayloadManager {
         booking.setBookingdates(bookingdates);
         booking.setAdditionalneeds("Breakfast");
 
-        System.out.println(booking);
+        logger.debug("Booking payload (faker): {}", booking);
 
         // Java Object -> JSON
         gson = new Gson();
@@ -133,7 +136,7 @@ public class PayloadManager {
         Booking booking = new Booking();
         booking.setLastname("sarah");
 
-        System.out.println(booking);
+        logger.debug("Partial Booking payload: {}", booking);
 
         gson = new Gson();
         return gson.toJson(booking);

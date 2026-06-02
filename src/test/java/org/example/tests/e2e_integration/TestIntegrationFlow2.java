@@ -4,6 +4,8 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import org.example.base.BaseTest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.endpoints.ApiConstansts;
 import org.example.pojo.restfulbooker.ResponsePOJO.BookingResponse;
 import org.example.pojo.restfulbooker.ResponsePOJO.GetBookingResponse;
@@ -41,7 +43,8 @@ public class TestIntegrationFlow2 extends BaseTest {
         Integer bookingID = (Integer) iTestContext.getAttribute("bookingid");
 
         String basePathGet = ApiConstansts.create_update_booking_url + "/" + bookingID;
-        System.out.println("url>>>>>>>>>>>" + basePathGet);
+        Logger logger = LogManager.getLogger(TestIntegrationFlow2.class);
+        logger.info("url >>>>>>>>>>> {}", basePathGet);
         requestSpecification.basePath(basePathGet);
 
         response = RestAssured.given(requestSpecification).when().log().all().get();

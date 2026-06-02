@@ -17,7 +17,6 @@ A robust **API Automation Framework** built using **Rest Assured** for testing t
 * [E2E Integration Test Flows](#-e2e-integration-test-flows)
 * [Retry Analyzer & Listeners](#-retry-analyzer--listeners)
 * [Log4j Logging](#-log4j-logging)
-* [MySQL DB Integration](#-mysql-db-integration)
 * [Parallel Execution](#-parallel-execution)
 * [Allure Reporting](#-allure-reporting)
 * [CI/CD Integration](#-cicd-integration)
@@ -35,7 +34,7 @@ This framework is designed to:
 * Support **parallel execution**
 * Integrate with **CI/CD pipelines**
 * Generate **detailed reports with Allure**
-* Validate API responses against **MySQL Database**
+* (No built-in DB validation included in this repo)
 * Provide comprehensive **Log4j logging**
 
 ---
@@ -44,16 +43,16 @@ This framework is designed to:
 
 | Category | Technology |
 |----------|------------|
-| Language | Java (JDK 23+) |
+| Language | Java (JDK 11+ — as set by maven-compiler-plugin) |
 | API Testing | Rest Assured 6.0.0, JSON Schema Validator 5.4.0 |
 | Test Framework | TestNG 7.12.0 |
 | Build Tool | Maven |
 | Assertions | AssertJ 3.27.7 |
 | JSON Parsing | GSON 2.13.2 |
-| Logging | Log4j2 2.23.1 |
+| Logging | Log4j2 2.25.4 |
 | Reporting | Allure TestNG 2.33.0 |
-| Test Data | Apache POI 5.3.0, JavaFaker 1.0.2 |
-| Database | MySQL Connector/J 9.3.0 |
+| Test Data | Apache POI 5.5.1, JavaFaker 1.0.2 |
+| Database | (none — no built-in DB validation) |
 | Config | dotenv-java 3.0.0, SnakeYAML 2.2 |
 | CI/CD | Jenkins |
 | Dashboard | React + Vite + Recharts, Express + SQLite (see `dashboard/`) |
@@ -91,14 +90,12 @@ flowchart TD
     end
 
     subgraph UtilLayer["Utility Layer"]
-        G["MySqlDBConnector"]
         H["EnvUtil"]
         I["Log4j Logger"]
     end
 
     subgraph External["External Systems"]
         J["REST API Server"]
-        K["MySQL Database"]
         L["Allure Reports"]
     end
 
@@ -107,9 +104,9 @@ flowchart TD
     B --> C & D
     C --> E
     B --> F
-    B --> G & H & I
+    B --> H & I
     C --> J
-    G --> K
+    
     D --> L
 ```
 
@@ -124,7 +121,6 @@ sequenceDiagram
     participant PM as PayloadManager
     participant RA as Rest Assured
     participant Server as API Server
-    participant DB as MySQL DB
     participant Log as Log4j
     participant Report as Allure
 
@@ -136,8 +132,7 @@ sequenceDiagram
     RA->>Server: HTTP Request (POST/GET/PUT/PATCH/DELETE)
     Server-->>RA: HTTP Response
     RA-->>Test: Parsed Response
-    Test->>DB: Validate in Database (Flow4)
-    DB-->>Test: DB Records
+    
     Test->>Log: Log assertions
     Test->>Report: Record Results
 ```
@@ -163,8 +158,9 @@ graph TD
         D1 --> D1a[Booking.java]
         D1 --> D1b[PartialBookingUpdate.java]
         D1 --> D1c[Auth.java]
-        E --> E1[MySqlDBConnector.java]
         E --> E2[EnvUtil.java]
+        E --> E3[PropertiesReader.java]
+        E --> E4[YamlReader.java]
     end
 
     subgraph src/test/java
@@ -173,6 +169,7 @@ graph TD
         F --> H[tests]
         F --> I[asserts]
         F --> L[listeners]
+        F --> M[utilExcels]
 
         G --> G1[BaseTest.java]
         H --> H1[e2e_integration]
@@ -191,6 +188,7 @@ graph TD
         J --> J1[log4j2.xml]
         J --> J2[config.yaml]
         J --> J3[data.properties]
+        J --> J4[TestData.xlsx]
     end
 ```
 
@@ -200,15 +198,22 @@ graph TD
 
 ### 🔹 Prerequisites
 
-* Install Java (JDK 23+)
+* Install Java (JDK 11+; compiler target is set to Java 11 in `pom.xml`)
 * Install Maven
-* (Optional) Install MySQL for DB validation tests
+* (No built-in DB validation required)
 
 ### 🔹 Environment Setup
 
-1. Copy the sample environment file:
+1. Copy the sample environment file (a sample `env.txt` is included in the repo):
+
+Unix / macOS:
 ```bash
-cp .env.sample .env
+cp env.txt .env
+```
+
+Windows (PowerShell / cmd):
+```powershell
+copy env.txt .env
 ```
 
 2. Edit `.env` and fill in your credentials:
@@ -216,14 +221,13 @@ cp .env.sample .env
 # API Credentials
 USERNAME=your_username
 PASSWORD=your_password
-
-# MySQL (for Flow4)
-MYSQL_HOST=localhost
-MYSQL_PORT=3306
-MYSQL_DATABASE=api_automation
-MYSQL_USERNAME=your_db_username
-MYSQL_PASSWORD=your_db_password
 ```
+
+Notes:
+- `EnvUtil` reads required values from the loaded `.env` file using `dotenv-java`.
+- `PropertiesReader` loads `src/main/resources/data.properties` for secondary config values.
+- `YamlReader` can be used to read structured settings from `src/test/resources/config.yaml`.
+
 
 **Important:** The `.env` file is in `.gitignore` and will NOT be committed to version control.
 
@@ -285,7 +289,7 @@ flowchart LR
 | **Flow 1** | `TestIntegrationFlow1` | 4 | Create → Verify → PUT Update → Delete |
 | **Flow 2** | `TestIntegrationFlow2` | 4 | Create → Verify → PATCH (firstname/lastname only) → Verify PATCH |
 | **Flow 3** | `TestIntegrationFlow3` | 3 | Create → Delete → Verify Deleted (404) |
-| **Flow 4** | `TestIntegrationFlow4` | 4 | Create → Validate in MySQL → Update → Verify Update in MySQL |
+| **Flow 4** | `TestIntegrationFlow4` | 4 | Create → Update → Verify Update |
 | **Flow 5** | `TestIntegrationFlow5_DDT` | DDT | Data-Driven: Create bookings from Excel data |
 
 ### Data-Driven Testing (DDT) - Flow 5
@@ -477,62 +481,7 @@ logger.error("Database validation failed: {}", e.getMessage());
 
 ---
 
-## 🗄 MySQL DB Integration
 
-Use this when you want to validate API data against MySQL or seed/clean test data before a test run.
-
-### DB Validation Flow
-
-```mermaid
-sequenceDiagram
-    participant Test as Test Class
-    participant API as REST API
-    participant DB as MySQL Database
-    participant Assert as AssertJ
-
-    Test->>API: POST /booking
-    API-->>Test: BookingResponse (ID: 123)
-    Test->>DB: SELECT * FROM booking WHERE id = 123
-    DB-->>Test: DB Record
-    Test->>Assert: Compare API response with DB record
-    Assert-->>Test: Validation Result
-```
-
-### Configure Environment Variables
-
-Add the DB values to your local `.env` file:
-
-```env
-MYSQL_HOST=localhost
-MYSQL_PORT=3306
-MYSQL_DATABASE=api_automation
-MYSQL_USERNAME=api_user
-MYSQL_PASSWORD=StrongPassword123
-MYSQL_JDBC_PARAMS=useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-```
-
-### Example: TestIntegrationFlow4
-
-```java
-@Test(groups = "qa", priority = 2)
-@Description("TC#INT4 - Validate Booking exists in MySQL Database")
-public void testValidateBookingInDatabase(ITestContext iTestContext) {
-    Integer bookingid = (Integer) iTestContext.getAttribute("bookingid");
-
-    try (Connection connection = MySqlDBConnector.getConnection()) {
-        List<Map<String, Object>> rows = MySqlDBConnector.executeSelect(
-            connection,
-            "SELECT booking_id, firstname, lastname FROM booking WHERE booking_id = ?",
-            bookingid
-        );
-
-        assertThat(rows).isNotEmpty();
-        assertThat(rows.get(0).get("firstname")).isEqualTo(expectedFirstname);
-    }
-}
-```
-
----
 
 ## ⚡ Parallel Execution
 
@@ -734,7 +683,7 @@ A second API project mirroring the VWO pattern covers Groq's OpenAI-compatible `
 | `modules/groq/GroqPayloadManager.java` | Gson ser/deser for request/response/error |
 | `tests/individual/groq/TestGroqChatCompletion.java` | Positive + invalid-key negative tests |
 
-Set `GROQ_API_KEY` in `.env` (see `.env.sample`), then:
+Set `GROQ_API_KEY` in `.env` (see `env.txt`), then:
 
 ```bash
 mvn test -Dtest=TestGroqChatCompletion
@@ -752,7 +701,6 @@ This framework provides a **scalable, maintainable, and production-ready solutio
 * 5 comprehensive E2E integration test flows (including DDT)
 * JSON Schema validation for API response structure verification
 * Log4j2 logging for debugging and traceability
-* MySQL database validation support
 * Powerful Allure reporting
 * CI/CD readiness with Jenkins
 * Extensibility for future enhancements

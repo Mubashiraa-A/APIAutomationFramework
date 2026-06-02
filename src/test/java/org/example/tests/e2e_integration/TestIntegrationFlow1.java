@@ -1,12 +1,10 @@
 package org.example.tests.e2e_integration;
 
-import com.google.protobuf.Api;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import org.example.base.BaseTest;
 import org.example.endpoints.ApiConstansts;
-import org.example.pojo.restfulbooker.RequestPOJO.Booking;
 import org.example.pojo.restfulbooker.ResponsePOJO.BookingResponse;
 import org.example.pojo.restfulbooker.ResponsePOJO.GetBookingResponse;
 import org.testng.ITestContext;
@@ -47,7 +45,6 @@ public class TestIntegrationFlow1 extends BaseTest {
         Integer bookingID = (Integer) iTestContext.getAttribute("bookingid");
 
         String basePathGet = ApiConstansts.create_update_booking_url + "/" + bookingID;
-        System.out.println("url>>>>>>>>>>>" + basePathGet);
         requestSpecification.basePath(basePathGet);
 
         response = RestAssured.given(requestSpecification).when().log().all().get();
@@ -91,9 +88,6 @@ public class TestIntegrationFlow1 extends BaseTest {
                 .when().cookie("token",token)
                 .log().all().delete();
         validatableResponse=response.then().log().all().statusCode(201);
-
-
-
     }
 
 }

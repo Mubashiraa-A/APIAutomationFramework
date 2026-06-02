@@ -6,12 +6,15 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UtilExcel {
 
     public static String SHEET_PATH = System.getProperty("user.dir") + "/src/test/resources/TestData.xlsx";
     static Workbook book;
     static Sheet sheet;
+    private static final Logger logger = LogManager.getLogger(UtilExcel.class);
 
     public static Object[][] getTestDataFromExcel(String sheetName) {
 
@@ -29,7 +32,7 @@ public class UtilExcel {
             sheet = book.getSheet(sheetName);
 
         } catch (IOException e) {
-            System.out.println("File not found");
+            logger.error("Excel file not found at {}: {}", SHEET_PATH, e.getMessage(), e);
         }
 
 

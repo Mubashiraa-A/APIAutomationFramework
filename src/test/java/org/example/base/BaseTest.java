@@ -12,6 +12,8 @@ import org.example.endpoints.ApiConstansts;
 import org.example.modules.PayloadManager;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BaseTest {
     //this is common to all test cases
@@ -22,10 +24,11 @@ public class BaseTest {
     public AssertAction assertAction;
     public PayloadManager payloadManager;
     public JsonPath jsonPath;
+    protected static final Logger logger = LogManager.getLogger(BaseTest.class);
 
     @BeforeTest
     public void setup() {
-        System.out.println("Start the test");
+        logger.info("Start the test");
         assertAction = new AssertAction();
         payloadManager = new PayloadManager();
 
@@ -37,12 +40,11 @@ public class BaseTest {
                 .setBaseUri(ApiConstansts.base_url)
                 .addHeader("Content-Type", "application/json")
                 .build().log().all();
-
     }
 
     @AfterTest
     public void teardown() {
-        System.out.println("Finished the test");
+        logger.info("Finished the test");
     }
 
     public String getToken() {
@@ -56,7 +58,5 @@ public class BaseTest {
 
         String token = payloadManager.getTokenResponse(response.asString()).getToken();
         return token;
-
-
     }
 }
